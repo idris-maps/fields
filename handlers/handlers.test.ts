@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.117.0/testing/asserts.ts";
-import initHandlers from "./mod.ts";
+import { initTableHandlers } from "./mod.ts";
 import initDb from "../db/sqlite/mod.ts";
 import type { Field } from "./deps.ts";
 
@@ -13,7 +13,7 @@ const fields: Field[] = [
 ];
 const name = "todos";
 await db.createTable(name, fields);
-const handlers = await initHandlers({ name, db });
+const handlers = await initTableHandlers({ name, db });
 const DATA = {
   ok: { done: false, todo: "todo", num: 1 },
   toSanitize: { done: "false", todo: "todo", num: "1" },
@@ -38,7 +38,7 @@ const hasExpectedKeys = (expectedKeys: string[], obj: any, msg?: string) => {
 await Deno.test("[Handlers] should throw if table does not exist", async () => {
   const NOT_A_TABLE = "not_a_table";
   try {
-    await initHandlers({ name: NOT_A_TABLE, db });
+    await initTableHandlers({ name: NOT_A_TABLE, db });
     shouldThrow();
   } catch (e) {
     isEq(e.message, `Table: ${NOT_A_TABLE} does not exist`);

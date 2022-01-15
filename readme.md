@@ -1,6 +1,7 @@
 # Fields
 
-JSON representation of with form fields. Type definitions and some assert functions are in `./types.ts`
+JSON representation of with form fields. Type definitions and some assert
+functions are in `./types.ts`
 
 ## `convert`
 
