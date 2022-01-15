@@ -1,8 +1,5 @@
 export type { Field } from "../../types.ts";
-export {
-  isCheckbox,
-  isNumericField,
-} from "../../types.ts";
+export { isCheckbox, isNumericField } from "../../types.ts";
 export {
   filter,
   find,

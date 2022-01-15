@@ -1,57 +1,19 @@
 # Fields
 
-JSON definition of form fields
+JSON representation of with form fields. Type definitions and some assert functions are in `./types.ts`
 
-## Validation
+## `convert`
 
-### `validateFields`
+Converts `Field[]` to JSON schema and typescript definitions
 
-Validates a field definition
+## `db`
 
-```ts
-const validateFields: (fields: any) => {
-  isValid: boolean;
-  messages?: string[];
-};
-```
+Database connectors
 
-### `validateValue`
+## `handlers`
 
-Validates a value against a field definition
+Handlers for server use
 
-```ts
-const validateValue: (field: Field, value: any) => {
-  isValid: boolean;
-  message?: string;
-};
-```
+## `validate`
 
-### `validateValues`
-
-Validates an object against an array of field definitions
-
-```ts
-const validateValues: (fields: Field[], data: any) => {
-  isValid: boolean;
-  messages?: string[];
-};
-```
-
-## Convert
-
-### `toJsonSchema`
-
-Convert an array of field definitions to a
-[JSON schema](https://json-schema.org/)
-
-```ts
-const toJsonSchema = (fields: Field[]) => JSONSchema7;
-```
-
-### `toTypeDefinition`
-
-Create a typescript interface from an array of field definitions
-
-```ts
-const toTypeDefinition = (fields: Field[]) => string;
-```
+Validations for field definitions and actual fields
