@@ -76,6 +76,7 @@ const validKeys = [
   "property",
   "step",
   "type",
+  "value",
 ];
 
 const getInvalidKeys = (obj: any) =>

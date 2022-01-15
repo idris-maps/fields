@@ -9,7 +9,6 @@ const field = {
 
 // asserts
 
-const isEq = assertEquals;
 const isTrue = (d: unknown, msg?: string) => assertEquals(d, true, msg);
 const isFalse = (d: unknown, msg?: string) => assertEquals(d, false, msg);
 
