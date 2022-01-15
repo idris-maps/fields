@@ -1,6 +1,6 @@
 import type { FieldsDb } from "./deps.ts";
-import type { FieldsHandlers } from "./types.d.ts";
-import getHelpers from "./helpers.ts";
+import type { FieldsTableHandlers } from "./types.d.ts";
+import getHelpers from "./table-helpers.ts";
 
 interface Props {
   name: string;
@@ -9,7 +9,7 @@ interface Props {
 
 export const initTableHandlers = async (
   { name, db }: Props,
-): Promise<FieldsHandlers> => {
+): Promise<FieldsTableHandlers> => {
   const table = await db.initTable(name);
   if (!table) throw new Error(`Table: ${name} does not exist`);
 
