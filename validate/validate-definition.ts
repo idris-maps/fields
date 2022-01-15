@@ -1,4 +1,4 @@
-import { Field, SelectOption } from "../types.ts";
+import { Field, SelectOption } from "./deps.ts";
 import { isBoolean, isNum, isString } from "./utils.ts";
 
 const ERR = {

@@ -5,7 +5,12 @@ export const isBoolean = (d: any): d is boolean =>
 export const isUndefined = (d: any): d is undefined =>
   typeof (d) === "undefined";
 export const isString = (d: any): d is string => String(d) === d;
-export const isNum = (d: any): d is number => !Number.isNaN(Number(d));
+export const isNum = (d: any): d is number =>
+  !isBoolean(d) &&
+  !isString(d) &&
+  !isUndefined(d) &&
+  !Array.isArray(d) &&
+  !Number.isNaN(Number(d));
 
 // strings
 
@@ -16,13 +21,19 @@ export const fitsPattern = (pattern: string, d: string) =>
   new RegExp(pattern).test(d);
 export const isDateString = (d: string) => {
   const [yyyy, mm, dd] = d.split("-");
-  return yyyy.length === 4 &&
-    mm.length === 2 &&
-    dd.length === 2 &&
+  return Boolean(yyyy) && yyyy.length === 4 &&
+    Boolean(mm) && mm.length === 2 &&
+    Boolean(dd) && dd.length === 2 &&
     new Date(d).toString() !== "Invalid Date";
 };
 
 // numbers
 
-export const isMultipleOf = (multiple: number, d: number) =>
-  d % multiple < 0.0000000000001; // account for 0.1 + 0.2 = 0.30000000000000004
+export const isMultipleOf = (multiple: number, d: number) => {
+  // account for 0.1 + 0.2 = 0.30000000000000004
+  const multiplier = Math.pow(
+    10,
+    (String(multiple).split(".")[1] || "").length || 0,
+  );
+  return (d * multiplier) % (multiple * multiplier) === 0;
+};

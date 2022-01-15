@@ -9,7 +9,7 @@ import {
   isTextarea,
   isTextField,
   SelectOption,
-} from "../types.ts";
+} from "./deps.ts";
 import {
   fitsPattern,
   isAlphaNum,
@@ -50,6 +50,8 @@ const MSG = {
   tooBig: (prop: string, max: number) => `${prop} is too big (max: ${max})`,
   notMultiple: (prop: string, step: number) =>
     `${prop} must be a multiple of ${step}`,
+  tooEarly: (prop: string, min: string) => `${prop} is too early (min: ${min})`,
+  tooLate: (prop: string, max: string) => `${prop} is too late (max: ${max})`,
 };
 
 const assert = (isValid: boolean, message: string): ValueValidation =>
@@ -89,11 +91,23 @@ export const validateValue = (field: Field, value: any): ValueValidation => {
   }
 
   if (isDate(field)) {
-    return assert(
-      isString(value) &&
-        isDateString(value),
-      MSG.notDate(field.property),
-    );
+    if (!(isString(value) && isDateString(value))) {
+      return { isValid: false, message: MSG.notDate(field.property) };
+    }
+    if (field.min && value < field.min) {
+      return {
+        isValid: false,
+        message: MSG.tooEarly(field.property, field.min),
+      };
+    }
+    if (field.max && value > field.max) {
+      return {
+        isValid: false,
+        message: MSG.tooLate(field.property, field.max),
+      };
+    }
+
+    return { isValid: true };
   }
 
   if (isTextarea(field)) {
@@ -144,7 +158,7 @@ export const validateValue = (field: Field, value: any): ValueValidation => {
       };
     }
 
-    if (field.max && value < field.max) {
+    if (field.max && value > field.max) {
       return { isValid: false, message: MSG.tooBig(field.property, field.max) };
     }
 
