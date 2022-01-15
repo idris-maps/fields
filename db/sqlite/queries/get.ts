@@ -1,5 +1,5 @@
 import type { Sql } from "../mod.ts";
-import type { Filter } from "../../filters.ts";
+import type { Filter } from "../deps.ts";
 
 const getLikeValue = (place: "start" | "end" | "contains", value: string) => {
   switch (place) {

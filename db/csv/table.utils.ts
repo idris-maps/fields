@@ -1,13 +1,8 @@
-import type { Field } from "./deps.ts";
-import type { Filter } from "../filters.ts";
+import type { Field, Filter } from "./deps.ts";
 import {
   filter,
   fromDsvFile,
   isCheckbox,
-  isNumericField,
-  toDsvFile,
-} from "./deps.ts";
-import {
   isFilterEq,
   isFilterGt,
   isFilterGte,
@@ -18,7 +13,9 @@ import {
   isFilterNotEq,
   isFilterNotIn,
   isFilterNotLike,
-} from "../filters.ts";
+  isNumericField,
+  toDsvFile,
+} from "./deps.ts";
 
 export const createFile = (path: string, fields: Field[]) =>
   Deno.writeTextFile(

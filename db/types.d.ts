@@ -1,5 +1,4 @@
-import { Filter } from "./filters.ts";
-import { Field } from "./deps.ts";
+import { Filter, Field } from "./deps.ts";
 
 type WithId<T> = T & { __id: string };
 

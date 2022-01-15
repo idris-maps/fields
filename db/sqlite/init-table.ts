@@ -1,12 +1,10 @@
 import { castRequest, castResponse } from "./cast.ts";
 import queries from "./queries/index.ts";
 import type { Sql } from "./mod.ts";
-import type { Field } from "./deps.ts";
+import type { Field, Filter } from "./deps.ts";
 import type { FieldsDbTable } from "../types.d.ts";
-import type { Filter } from "../filters.ts";
 
 const {
-  createTable,
   get,
   getById,
   insert,

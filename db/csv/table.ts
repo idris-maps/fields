@@ -1,6 +1,5 @@
-import type { Field } from "./deps.ts";
+import type { Field, Filter } from "./deps.ts";
 import type { FieldsDbTable } from "../types.d.ts";
-import type { Filter } from "../filters.ts";
 import { exists } from "./fs.ts";
 import { filter, find, map, toArray } from "./deps.ts";
 import {
