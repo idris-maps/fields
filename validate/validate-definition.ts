@@ -1,14 +1,19 @@
 import { Field, SelectOption } from "./deps.ts";
-import { isBoolean, isNum, isString } from "./utils.ts";
+import { isAlphaNumOrUnderscore, isBoolean, isNum, isString } from "./utils.ts";
 
 const ERR = {
   noProperty: "all fields must have a property",
+  propertyAlphaNum:
+    'property may only contain alpha numeric characters and "_" (underscore)',
+  propertyStartsWithUnderscore: 'property may not start with "_" (underscore)',
   noType: "all fields must have a valid type",
   noOptions:
     "options must be an array of string or { label: string, value: string }",
   notString: (d: string) => `${d} must be a string`,
   notNum: (d: string) => `${d} must be a number`,
   notBoolean: (d: string) => `${d} must be boolean`,
+  uniqProp: "fields must have uniq properties",
+  invalidKeys: (d: string[]) => `invalid keys: ${d.join(", ")}`,
 };
 
 const isOption = (d: any): d is SelectOption | string => (
@@ -29,31 +34,69 @@ const assertIfDefined = (
   msg: (k: string) => string,
 ) =>
   (key: string, obj: any) => {
-    if (obj && obj[key] && assertion(obj[key])) {
-      return undefined;
+    if (obj && obj[key]) {
+      if (!assertion(obj[key])) {
+        throw msg(key);
+      }
     }
-    throw msg(key);
+    return undefined;
   };
 
 const assertStringIfDefined = assertIfDefined(isString, ERR.notString);
 const assertNumberIfDefined = assertIfDefined(isNum, ERR.notNum);
 const assertBooleanIfDefined = assertIfDefined(isBoolean, ERR.notBoolean);
 
+const stringTypes = [
+  "color",
+  "date",
+  "email",
+  "password",
+  "tel",
+  "text",
+  "textarea",
+];
+const numTypes = [
+  "number",
+  "range",
+];
+const optionTypes = [
+  "select",
+  "radio",
+];
+
+const validKeys = [
+  "label",
+  "max",
+  "maxLength",
+  "min",
+  "minLength",
+  "notRequired",
+  "pattern",
+  "placeholder",
+  "property",
+  "step",
+  "type",
+];
+
+const getInvalidKeys = (obj: any) =>
+  Object.keys(obj)
+    .filter((d) => !validKeys.includes(d));
+
 export const isField = (field: any): field is Field => {
   if (!field.property) throw ERR.noProperty;
+  if (!isString(field.property) || !isAlphaNumOrUnderscore(field.property)) {
+    throw ERR.propertyAlphaNum;
+  }
+  if (field.property.startsWith("__")) throw ERR.propertyStartsWithUnderscore;
   if (!field.type) throw ERR.noType;
 
-  if (
-    ["color", "date", "email", "password", "tel", "text", "textarea"].includes(
-      field.type,
-    )
-  ) {
+  if (stringTypes.includes(field.type)) {
     assertStringIfDefined("value", field);
-  } else if (["number", "range"].includes(field.type)) {
+  } else if (numTypes.includes(field.type)) {
     assertNumberIfDefined("value", field);
   } else if (field.type === "checkbox") {
     assertBooleanIfDefined("value", field);
-  } else if (["select", "radio"].includes(field.type)) {
+  } else if (optionTypes.includes(field.type)) {
     if (!areOptions(field.options)) throw ERR.noOptions;
   } else {
     throw ERR.noType;
@@ -70,6 +113,10 @@ export const isField = (field: any): field is Field => {
   assertNumberIfDefined("step", field);
 
   assertBooleanIfDefined("notRequired", field);
+
+  if (getInvalidKeys(field).length) {
+    throw ERR.invalidKeys(getInvalidKeys(field));
+  }
 
   return true;
 };

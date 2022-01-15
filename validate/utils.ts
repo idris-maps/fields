@@ -26,6 +26,8 @@ export const isDateString = (d: string) => {
     Boolean(dd) && dd.length === 2 &&
     new Date(d).toString() !== "Invalid Date";
 };
+export const isAlphaNumOrUnderscore = (d: string) =>
+  isAlphaNum(d.split("_").join(""));
 
 // numbers
 
