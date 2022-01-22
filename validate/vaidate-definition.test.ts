@@ -17,6 +17,7 @@ Deno.test("[validateFields] property", () => {
   isFalse(validateFields([{ ...field, property: "" }]).isValid);
   isFalse(validateFields([{ ...field, property: undefined }]).isValid);
   isFalse(validateFields([{ ...field, property: "héllö" }]).isValid);
+  isFalse(validateFields([{ ...field, property: "12h" }]).isValid);
 });
 
 Deno.test("[validateFields] type", () => {

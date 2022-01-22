@@ -1,11 +1,18 @@
 import { Field, SelectOption } from "./deps.ts";
-import { isAlphaNumOrUnderscore, isBoolean, isNum, isString } from "./utils.ts";
+import {
+  isAlphaNumOrUnderscore,
+  isBoolean,
+  isNum,
+  isString,
+  startsWithNum,
+} from "./utils.ts";
 
 const ERR = {
   noProperty: "all fields must have a property",
   propertyAlphaNum:
     'property may only contain alpha numeric characters and "_" (underscore)',
   propertyStartsWithUnderscore: 'property may not start with "_" (underscore)',
+  propertyStartsWithNumber: "property may not start with a number",
   noType: "all fields must have a valid type",
   noOptions:
     "options must be an array of string or { label: string, value: string }",
@@ -88,7 +95,9 @@ export const isField = (field: any): field is Field => {
   if (!isString(field.property) || !isAlphaNumOrUnderscore(field.property)) {
     throw ERR.propertyAlphaNum;
   }
-  if (field.property.startsWith("__")) throw ERR.propertyStartsWithUnderscore;
+  if (field.property.startsWith("_")) throw ERR.propertyStartsWithUnderscore;
+  if (startsWithNum(field.property)) throw ERR.propertyStartsWithNumber;
+
   if (!field.type) throw ERR.noType;
 
   if (stringTypes.includes(field.type)) {

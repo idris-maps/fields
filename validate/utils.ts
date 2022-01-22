@@ -28,6 +28,7 @@ export const isDateString = (d: string) => {
 };
 export const isAlphaNumOrUnderscore = (d: string) =>
   isAlphaNum(d.split("_").join(""));
+export const startsWithNum = (d: string) => "0123456789".includes(d[0]);
 
 // numbers
 
