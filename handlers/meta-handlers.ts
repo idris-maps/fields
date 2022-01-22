@@ -33,7 +33,7 @@ interface Props {
 }
 
 const metaHandlers = ({ db }: Props): FieldsMetaHandlers => ({
-  post: async (name: string, fields: Field[]) => {
+  post: async (name: string, fields: any) => {
     if (getNameError(name)) {
       return { status: 400, body: { error: getNameError(name) } };
     }

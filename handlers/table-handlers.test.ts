@@ -13,7 +13,7 @@ const fields: Field[] = [
 ];
 const name = "todos";
 await db.createTable(name, fields);
-const handlers = await initTableHandlers({ name, db });
+const handlers = initTableHandlers(db);
 const DATA = {
   ok: { done: false, todo: "todo", num: 1 },
   toSanitize: { done: "false", todo: "todo", num: "1" },
@@ -22,8 +22,6 @@ const DATA = {
 // asserts
 
 const isEq = assertEquals;
-const shouldThrow = (msg?: string) =>
-  assertEquals(true, false, msg || "should throw");
 const isTrue = (d: unknown, msg?: string) => assertEquals(d, true, msg);
 const isFalse = (d: unknown, msg?: string) => assertEquals(d, false, msg);
 const isTruthy = (d: unknown, msg?: string) =>
@@ -35,14 +33,13 @@ const hasExpectedKeys = (expectedKeys: string[], obj: any, msg?: string) => {
   isTrue(keys.every((d) => expectedKeys.includes(d)), msg);
 };
 
-await Deno.test("[Handlers] should throw if table does not exist", async () => {
-  const NOT_A_TABLE = "not_a_table";
-  try {
-    await initTableHandlers({ name: NOT_A_TABLE, db });
-    shouldThrow();
-  } catch (e) {
-    isEq(e.message, `Table: ${NOT_A_TABLE} does not exist`);
-  }
+await Deno.test("[Handlers] should return 404 if table does not exist", async () => {
+  isEq((await handlers.delete("not_a_table", "_id")).status, 404);
+  isEq((await handlers.get("not_a_table", "_id")).status, 404);
+  isEq((await handlers.getAll("not_a_table")).status, 404);
+  isEq((await handlers.patch("not_a_table", "_id", {})).status, 404);
+  isEq((await handlers.post("not_a_table", {})).status, 404);
+  isEq((await handlers.put("not_a_table", "_id", {})).status, 404);
 });
 
 await Deno.test("[Handlers] has expected keys", () => {
@@ -53,7 +50,7 @@ await Deno.test("[Handlers] has expected keys", () => {
 });
 
 await Deno.test("[Handlers .post] should sanitize and generate an __id", async () => {
-  const { status, body } = await handlers.post(DATA.toSanitize);
+  const { status, body } = await handlers.post(name, DATA.toSanitize);
   isEq(status, 200);
   isEq(body?.num, 1);
   isFalse(body?.done);
@@ -61,7 +58,7 @@ await Deno.test("[Handlers .post] should sanitize and generate an __id", async (
 });
 
 await Deno.test("[Handlers .post] should validate", async () => {
-  const { status, body } = await handlers.post({
+  const { status, body } = await handlers.post(name, {
     ...DATA.ok,
     todo: "toooooooooooo long",
   });
@@ -70,16 +67,16 @@ await Deno.test("[Handlers .post] should validate", async () => {
 });
 
 const create = async (d: any = {}): Promise<string> =>
-  (await handlers.post({ ...DATA.ok, ...d })).body?.__id;
+  (await handlers.post(name, { ...DATA.ok, ...d })).body?.__id;
 
 await Deno.test("[Handlers .put] should return 404 if not exists", async () => {
-  const { status } = await handlers.put(crypto.randomUUID(), DATA.ok);
+  const { status } = await handlers.put(name, crypto.randomUUID(), DATA.ok);
   isEq(status, 404);
 });
 
 await Deno.test("[Handlers .put] should sanitize", async () => {
   const id = await create();
-  const { status, body } = await handlers.put(id, DATA.toSanitize);
+  const { status, body } = await handlers.put(name, id, DATA.toSanitize);
   isEq(status, 200);
   isEq(body?.num, 1);
   isFalse(body?.done);
@@ -88,7 +85,7 @@ await Deno.test("[Handlers .put] should sanitize", async () => {
 
 await Deno.test("[Handlers .put] should validate", async () => {
   const id = await create();
-  const { status, body } = await handlers.put(id, {
+  const { status, body } = await handlers.put(name, id, {
     ...DATA.ok,
     todo: undefined,
   });
@@ -99,7 +96,7 @@ await Deno.test("[Handlers .put] should validate", async () => {
 await Deno.test("[Handlers .put] should update", async () => {
   const UPDATED = "updated";
   const id = await create();
-  const { status, body } = await handlers.put(id, {
+  const { status, body } = await handlers.put(name, id, {
     ...DATA.ok,
     todo: UPDATED,
   });
@@ -108,13 +105,13 @@ await Deno.test("[Handlers .put] should update", async () => {
 });
 
 await Deno.test("[Handlers .patch] should return 404 if not exists", async () => {
-  const { status } = await handlers.patch(crypto.randomUUID(), DATA.ok);
+  const { status } = await handlers.patch(name, crypto.randomUUID(), DATA.ok);
   isEq(status, 404);
 });
 
 await Deno.test("[Handlers .patch] should sanitize", async () => {
   const id = await create();
-  const { status, body } = await handlers.patch(id, {
+  const { status, body } = await handlers.patch(name, id, {
     todo: DATA.toSanitize.todo,
   });
   isEq(status, 200);
@@ -125,7 +122,7 @@ await Deno.test("[Handlers .patch] should sanitize", async () => {
 
 await Deno.test("[Handlers .patch] should validate", async () => {
   const id = await create();
-  const { status, body } = await handlers.patch(id, {
+  const { status, body } = await handlers.patch(name, id, {
     todo: "tooooooooo long",
   });
   isEq(status, 400);
@@ -135,19 +132,19 @@ await Deno.test("[Handlers .patch] should validate", async () => {
 await Deno.test("[Handlers .patch] should update", async () => {
   const UPDATED = "updated";
   const id = await create();
-  const { status, body } = await handlers.patch(id, { todo: UPDATED });
+  const { status, body } = await handlers.patch(name, id, { todo: UPDATED });
   isEq(status, 200);
   isEq(body?.todo, UPDATED);
 });
 
 await Deno.test("[Handlers .get] should return 404 if not exists", async () => {
-  const { status } = await handlers.get(crypto.randomUUID());
+  const { status } = await handlers.get(name, crypto.randomUUID());
   isEq(status, 404);
 });
 
 await Deno.test("[Handlers .get] should return datum", async () => {
   const id = await create();
-  const { status, body } = await handlers.get(id);
+  const { status, body } = await handlers.get(name, id);
   isEq(status, 200);
   isEq(body?.__id, id);
   isEq(body?.done, DATA.ok.done);
@@ -157,28 +154,30 @@ await Deno.test("[Handlers .get] should return datum", async () => {
 
 await Deno.test("[Handlers .delete] should delete datum", async () => {
   const id = await create();
-  const { status } = await handlers.delete(id);
+  const { status } = await handlers.delete(name, id);
   isEq(status, 204);
-  isFalsy(await handlers.get(id));
+  isFalsy(await handlers.get(name, id));
 });
 
 await Deno.test("[Handlers .getAll] should return an array", async () => {
   await create();
-  const { status, body } = await handlers.getAll();
+  const { status, body } = await handlers.getAll(name);
   isEq(status, 200);
   isTrue(Array.isArray(body));
 });
 
 const clearTable = async () => {
-  const ids: string[] = (await handlers.getAll()).body.map((d: any) => d.__id);
-  return Promise.all(ids.map(handlers.delete));
+  const ids: string[] = (await handlers.getAll(name)).body.map((d: any) =>
+    d.__id
+  );
+  return Promise.all(ids.map((d) => handlers.delete(name, d)));
 };
 
 await Deno.test("[Handlers .getAll] should return all entries", async () => {
   await clearTable();
   const one = await create();
   const two = await create();
-  const { status, body } = await handlers.getAll();
+  const { status, body } = await handlers.getAll(name);
   isEq(status, 200);
   const ids = body.map((d: any) => d.__id);
   isEq(ids.length, 2);
@@ -191,12 +190,12 @@ await Deno.test('[Handlers .getAll] should filter "eq" / "notEq"', async () => {
   await create({ todo: "aaa" });
   await create({ todo: "bbb" });
 
-  const eq = await handlers.getAll({ "todo.eq": "aaa" });
+  const eq = await handlers.getAll(name, { "todo.eq": "aaa" });
   isEq(eq.status, 200);
   isEq(eq.body.length, 1);
   isEq(eq.body[0].todo, "aaa");
 
-  const notEq = await handlers.getAll({ "todo.notEq": "aaa" });
+  const notEq = await handlers.getAll(name, { "todo.notEq": "aaa" });
   isEq(notEq.status, 200);
   isEq(notEq.body.length, 1);
   isEq(notEq.body[0].todo, "bbb");
@@ -208,7 +207,7 @@ await Deno.test('[Handlers .getAll] should filter "in" / "notIn"', async () => {
   await create({ todo: "bbb" });
   await create({ todo: "ccc" });
 
-  const _in = await handlers.getAll({ "todo.in": "aaa,bbb" });
+  const _in = await handlers.getAll(name, { "todo.in": "aaa,bbb" });
   isEq(_in.status, 200);
   isEq(_in.body.length, 2);
   const todosIn = _in.body.map((d: any) => d.todo);
@@ -216,7 +215,7 @@ await Deno.test('[Handlers .getAll] should filter "in" / "notIn"', async () => {
   isTrue(todosIn.includes("bbb"));
   isFalse(todosIn.includes("ccc"));
 
-  const notIn = await handlers.getAll({ "todo.notIn": "aaa,bbb" });
+  const notIn = await handlers.getAll(name, { "todo.notIn": "aaa,bbb" });
   isEq(notIn.status, 200);
   isEq(notIn.body.length, 1);
   const todosNotIn = notIn.body.map((d: any) => d.todo);
@@ -224,7 +223,7 @@ await Deno.test('[Handlers .getAll] should filter "in" / "notIn"', async () => {
   isFalse(todosNotIn.includes("bbb"));
   isTrue(todosNotIn.includes("ccc"));
 
-  const combined = await handlers.getAll({
+  const combined = await handlers.getAll(name, {
     "todo.in": "aaa",
     "todo.notIn": "aaa,bbb",
   });
@@ -238,28 +237,28 @@ await Deno.test('[Handlers .getAll] should filter "gt/gte/lt/lte"', async () => 
   await create({ todo: "bbb" });
   await create({ todo: "ccc" });
 
-  const gt = await handlers.getAll({ "todo.gt": "bbb" });
+  const gt = await handlers.getAll(name, { "todo.gt": "bbb" });
   isEq(gt.status, 200);
   const todosGt = gt.body.map((d: any) => d.todo);
   isFalse(todosGt.includes("aaa"));
   isFalse(todosGt.includes("bbb"));
   isTrue(todosGt.includes("ccc"));
 
-  const gte = await handlers.getAll({ "todo.gte": "bbb" });
+  const gte = await handlers.getAll(name, { "todo.gte": "bbb" });
   isEq(gte.status, 200);
   const todosGte = gte.body.map((d: any) => d.todo);
   isFalse(todosGte.includes("aaa"));
   isTrue(todosGte.includes("bbb"));
   isTrue(todosGte.includes("ccc"));
 
-  const lt = await handlers.getAll({ "todo.lt": "bbb" });
+  const lt = await handlers.getAll(name, { "todo.lt": "bbb" });
   isEq(lt.status, 200);
   const todosLt = lt.body.map((d: any) => d.todo);
   isTrue(todosLt.includes("aaa"));
   isFalse(todosLt.includes("bbb"));
   isFalse(todosLt.includes("ccc"));
 
-  const lte = await handlers.getAll({ "todo.lte": "bbb" });
+  const lte = await handlers.getAll(name, { "todo.lte": "bbb" });
   isEq(lte.status, 200);
   const todosLte = lte.body.map((d: any) => d.todo);
   isTrue(todosLte.includes("aaa"));

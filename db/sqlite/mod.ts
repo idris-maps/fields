@@ -33,8 +33,8 @@ export default async (fileName: string): Promise<FieldsDb> => {
       const exists = tables.map((d) => d.name).includes(name);
       if (exists) return false;
 
-      await addTable(sql, name, fields);
       await createTable(sql, name, fields);
+      await addTable(sql, name, fields);
       return true;
     },
     dropTable: async (name: string) => await dropTable(sql, name),
