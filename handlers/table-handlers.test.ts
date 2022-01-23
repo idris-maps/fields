@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.117.0/testing/asserts.ts";
-import { initTableHandlers } from "./mod.ts";
+import initTableHandlers from "./mod.ts";
 import initDb from "../db/sqlite/mod.ts";
 import type { Field } from "./deps.ts";
 
@@ -13,7 +13,7 @@ const fields: Field[] = [
 ];
 const name = "todos";
 await db.createTable(name, fields);
-const handlers = initTableHandlers(db);
+const handlers = initTableHandlers(db).tables;
 const DATA = {
   ok: { done: false, todo: "todo", num: 1 },
   toSanitize: { done: "false", todo: "todo", num: "1" },
@@ -111,9 +111,8 @@ await Deno.test("[Handlers .patch] should return 404 if not exists", async () =>
 
 await Deno.test("[Handlers .patch] should sanitize", async () => {
   const id = await create();
-  const { status, body } = await handlers.patch(name, id, {
-    todo: DATA.toSanitize.todo,
-  });
+  const { status, body } = await handlers.patch(name, id, DATA.toSanitize);
+
   isEq(status, 200);
   isEq(body?.num, 1);
   isFalse(body?.done);

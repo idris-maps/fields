@@ -33,6 +33,7 @@ interface NumberProps extends BaseProps {
 
 export interface Checkbox extends BaseProps {
   type: "checkbox";
+  value?: boolean;
 }
 
 export interface Color extends BaseProps {

@@ -16,5 +16,5 @@ export interface FieldsMetaHandlers {
   getFields: (name: string) => Res;
   getAll: () => Res;
   getSchema: (name: string) => Res;
-  post: (name: string, fields: any) => Res;
+  post: (data: any) => Res;
 }

@@ -61,6 +61,10 @@ const getEnumOptions = (opt: SelectOption[] | string[]) =>
   opt.map((d) => isEnumString(d) ? d : d.value);
 
 export const validateValue = (field: Field, value: any): ValueValidation => {
+  if (isUndefined(value) && field.value) {
+    return { isValid: true };
+  }
+
   if (isEnumField(field)) {
     const values = getEnumOptions(field.options);
     return assert(

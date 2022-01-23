@@ -10,12 +10,12 @@ import {
 const ERR = {
   noProperty: "all fields must have a property",
   propertyAlphaNum:
-    'property may only contain alpha numeric characters and "_" (underscore)',
-  propertyStartsWithUnderscore: 'property may not start with "_" (underscore)',
+    "property may only contain alpha numeric characters and _ (underscore)",
+  propertyStartsWithUnderscore: "property may not start with _ (underscore)",
   propertyStartsWithNumber: "property may not start with a number",
   noType: "all fields must have a valid type",
   noOptions:
-    "options must be an array of string or { label: string, value: string }",
+    "options must be an array of strings or { label: string, value: string }[]",
   notString: (d: string) => `${d} must be a string`,
   notNum: (d: string) => `${d} must be a number`,
   notBoolean: (d: string) => `${d} must be boolean`,
@@ -78,6 +78,7 @@ const validKeys = [
   "min",
   "minLength",
   "notRequired",
+  "options",
   "pattern",
   "placeholder",
   "property",
@@ -134,6 +135,10 @@ export const isField = (field: any): field is Field => {
 export const validateFields = (fields: any) => {
   if (!Array.isArray(fields)) {
     return { isValid: false, messages: ["fields must be an array"] };
+  }
+
+  if (!fields.length) {
+    return { isValid: false, messages: ["fields may not be empty"] };
   }
 
   let messages: string[] = [];

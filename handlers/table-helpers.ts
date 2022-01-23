@@ -1,10 +1,19 @@
 import type { Field, Filter } from "./deps.ts";
-import { isCheckbox, isNumericField, validateValues } from "./deps.ts";
+import {
+  isCheckbox,
+  isNumericField,
+  isUndefined,
+  validateValues,
+} from "./deps.ts";
 
 const initSanitizer = (fields: Field[]) => {
   const existingFields = fields.map((d) => d.property);
   const numericFields = fields.filter(isNumericField).map((d) => d.property);
   const booleanFields = fields.filter(isCheckbox).map((d) => d.property);
+  const defaultValues = fields.reduce(
+    (r, d) => isUndefined(d.value) ? r : ({ ...r, [d.property]: d.value }),
+    {},
+  );
 
   return (data: any): any =>
     Object.keys(data)
@@ -23,7 +32,7 @@ const initSanitizer = (fields: Field[]) => {
           return { ...r, [key]: data[key] };
         }
         return r;
-      }, {});
+      }, defaultValues);
 };
 
 const isField = (d: Field | undefined): d is Field => Boolean(d);
