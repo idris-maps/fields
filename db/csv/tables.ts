@@ -63,7 +63,14 @@ const dropTable = async (
   return saveTablesJson(path, store);
 };
 
+const createFolderIfNotExists = async (folder: string) => {
+  if (await exists(folder)) { return }
+  await Deno.mkdir(folder, { recursive: true })
+  return
+}
+
 export default async (folder: string) => {
+  await createFolderIfNotExists(folder)
   const path = getFilePath(folder);
   const store = await init(path);
 
