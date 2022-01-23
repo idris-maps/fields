@@ -15,6 +15,10 @@ Database connectors
 
 Handlers for server use
 
+## `server`
+
+Fields server
+
 ## `validate`
 
 Validations for field definitions and actual fields
