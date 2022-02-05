@@ -1,6 +1,6 @@
 import _server from "https://deno.land/x/anders/server/mod.ts";
 import _handlers from "../handlers/mod.ts";
-import _html from "https://raw.githubusercontent.com/idris-maps/deno-utils/master/html/mod.ts";
+import _html from "https://deno.land/x/anders@v0.0.2/html/mod.ts";
 
 export * from "https://deno.land/x/anders/server/types.d.ts";
 export * from "../db/types.d.ts";

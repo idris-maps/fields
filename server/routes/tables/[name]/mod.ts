@@ -1,21 +1,23 @@
 import type { Route } from "../../../utils.ts";
 import { setRoute } from "../../../utils.ts";
 import { html } from "../../../deps.ts";
-import { layout, form, table } from "../../../ui/mod.ts";
+import { form, layout, table } from "../../../ui/mod.ts";
 import type { Field } from "../../../deps.ts";
 
-const getUrl = (tableName: string) => [
-  '/api/tables',
-  `/${tableName}/data`,
-  '?redirect=',
-  encodeURIComponent(`/tables/${tableName}`),
-].join('')
+const getUrl = (tableName: string) =>
+  [
+    "/api/tables",
+    `/${tableName}/data`,
+    "?redirect=",
+    encodeURIComponent(`/tables/${tableName}`),
+  ].join("");
 
 const page = (tableName: string, fields: Field[], data: any[]) =>
   layout(html`
     <main>
+      <h1>${tableName}</h1>
       ${table(fields, data)}
-      ${form('POST', getUrl(tableName), fields)}
+      ${form("POST", getUrl(tableName), fields)}
     </main>
 `);
 

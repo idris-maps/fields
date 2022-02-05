@@ -14,15 +14,20 @@ const row = (fields: Field[]) =>
   (data: any) =>
     html`
       <tr>
-        ${fields.map(({ property }) => `<td>${data[property] || ""}</td>`)}
+        ${
+      fields.map(({ property, type }) =>
+        `<td>${data[property] || (type === "checkbox" ? "false" : "")}</td>`
+      )
+    }
       </tr>
   `;
 
-export default (fields: Field[], data: any[]) => html`
+export default (fields: Field[], data: any[]) =>
+  html`
   <table>
   ${head(fields)}
   <tbody>
     ${data.map(row(fields))}
   </tbody>
   </table>
-`
+`;

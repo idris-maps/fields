@@ -6,6 +6,12 @@ import {
   validateValues,
 } from "./deps.ts";
 
+const setUndefinedBooleansToFalse = (booleanFields: string[], data: any) =>
+  booleanFields.reduce(
+    (data, key) => data[key] ? data : { ...data, [key]: false },
+    data,
+  );
+
 const initSanitizer = (fields: Field[]) => {
   const existingFields = fields.map((d) => d.property);
   const numericFields = fields.filter(isNumericField).map((d) => d.property);
@@ -16,20 +22,16 @@ const initSanitizer = (fields: Field[]) => {
   );
 
   return (data: any): any =>
-    Object.keys(data)
-      .reduce((r, key) => {
+    Object.entries(setUndefinedBooleansToFalse(booleanFields, data))
+      .reduce((r, [key, value]) => {
         if (numericFields.includes(key)) {
-          return { ...r, [key]: Number(data[key]) };
+          return { ...r, [key]: Number(value) };
         }
         if (booleanFields.includes(key)) {
-          return {
-            ...r,
-            [key]: data[key] === true || data[key] === "true" ||
-              data[key] === "1" || data[key] === 1,
-          };
+          return { ...r, [key]: ["true", "on", "1"].includes(String(value)) };
         }
         if (existingFields.includes(key)) {
-          return { ...r, [key]: data[key] };
+          return { ...r, [key]: value };
         }
         return r;
       }, defaultValues);
