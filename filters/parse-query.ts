@@ -1,8 +1,8 @@
-import type { Filter } from './types.ts'
-import type { Field } from './deps.ts'
+import type { Filter } from "./types.ts";
+import type { Field } from "./deps.ts";
 
 const isPlace = (d?: string): d is "start" | "end" | "contains" =>
-Boolean(d) && ["start", "end", "contains"].includes(String(d));
+  Boolean(d) && ["start", "end", "contains"].includes(String(d));
 
 const parseFilter = (
   key: string,

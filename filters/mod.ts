@@ -1,4 +1,4 @@
-import parseQuery from './parse-query.ts'
+import parseQuery from "./parse-query.ts";
 
-export * from './types.ts'
+export * from "./types.ts";
 export const parseQueryFilters = parseQuery;
