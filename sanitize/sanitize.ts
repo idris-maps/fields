@@ -3,7 +3,11 @@ import { isCheckbox, isNumericField, isUndefined } from "./deps.ts";
 
 const getDefaultValues = (fields: Field[]): any =>
   fields.reduce(
-    (r, d) => isUndefined(d.value) ? r : ({ ...r, [d.property]: d.value }),
+    (r, d) => isUndefined(d.value)
+      ? d.type === 'checkbox'
+        ? ({ ...r, [d.property]: false })
+        : r
+      : ({ ...r, [d.property]: d.value }),
     {},
   );
 
