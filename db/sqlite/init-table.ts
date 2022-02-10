@@ -2,7 +2,7 @@ import { castRequest, castResponse } from "./cast.ts";
 import queries from "./queries/index.ts";
 import type { Sql } from "./mod.ts";
 import type { Field, Filter } from "./deps.ts";
-import type { FieldsDbTable } from "../types.d.ts";
+import type { FieldsDbTable, FieldsTableSort } from "../types.d.ts";
 
 const {
   get,
@@ -20,8 +20,8 @@ export default <T>(
   Promise.resolve({
     name,
     fields,
-    get: async (filters?: Filter[]) =>
-      (await get(sql, name, filters)).map((d) => castResponse(fields, d)),
+    get: async (filters?: Filter[], sort?: FieldsTableSort) =>
+      (await get(sql, name, filters, sort)).map((d) => castResponse(fields, d)),
     getById: async (id: string) =>
       castResponse(fields, await getById(sql, name, id)),
     insert: async (d: T) =>

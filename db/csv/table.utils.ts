@@ -73,7 +73,7 @@ export const getFiltering = (
   const pipe: PipeFunction[] = filters
     .map((f) => {
       if (isFilterEq(f)) {
-        return filter((d: any) => d[f.column] === f.value);
+        return filter((d: any) => String(d[f.column]) === f.value);
       }
       if (isFilterGt(f)) {
         return filter((d: any) => d[f.column] > f.value);
@@ -82,7 +82,7 @@ export const getFiltering = (
         return filter((d: any) => d[f.column] >= f.value);
       }
       if (isFilterIn(f)) {
-        return filter((d: any) => f.values.includes(d[f.column]));
+        return filter((d: any) => f.values.includes(String(d[f.column])));
       }
       if (isFilterLike(f)) {
         return filter((d: any) => {
@@ -104,10 +104,10 @@ export const getFiltering = (
         return filter((d: any) => d[f.column] <= f.value);
       }
       if (isFilterNotEq(f)) {
-        return filter((d: any) => d[f.column] !== f.value);
+        return filter((d: any) => String(d[f.column]) !== f.value);
       }
       if (isFilterNotIn(f)) {
-        return filter((d: any) => !f.values.includes(d[f.column]));
+        return filter((d: any) => !f.values.includes(String(d[f.column])));
       }
       if (isFilterNotLike(f)) {
         return filter((d: any) => {
