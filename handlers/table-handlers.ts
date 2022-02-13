@@ -13,8 +13,8 @@ export const initTableHandlers = (db: FieldsDb): FieldsTableHandlers => ({
     if (!table) return { status: 404 };
 
     const filters = table.getFilters(query);
-    const sort = table.getSort(query);
-    return { status: 200, body: await table.get(filters, sort) };
+    const { sort, limit, offset } = table.getSelect(query);
+    return { status: 200, body: await table.get(filters, sort, limit, offset) };
   },
   get: async (name, id) => {
     const table = await getTable(db, name);

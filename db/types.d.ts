@@ -4,7 +4,7 @@ type WithId<T> = T & { __id: string };
 
 export interface FieldsTableSort {
   column: string;
-  asc?: boolean;
+  desc?: boolean;
 }
 
 export interface FieldsDbTable<T> {

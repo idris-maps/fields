@@ -431,13 +431,13 @@ Deno.test("[csv connector] table.get sort", async () => {
 
   const sorted = await table.get(
     [{ column: "todo", op: "eq", value: "sort" }],
-    { column: "num" },
+    { column: "num", desc: true },
   );
   const sortedDesc = await table.get([{
     column: "todo",
     op: "eq",
     value: "sort",
-  }], { column: "num", asc: false });
+  }], { column: "num", desc: true });
   isEq(sorted, sortedDesc);
 
   const sortedDescNums = sortedDesc.map((d) => d.num);
@@ -447,7 +447,7 @@ Deno.test("[csv connector] table.get sort", async () => {
     column: "todo",
     op: "eq",
     value: "sort",
-  }], { column: "num", asc: true });
+  }], { column: "num" });
   const sortedAscNums = sortedAsc.map((d) => d.num);
   isEq(sortedAscNums, [...sortedAscNums].sort((a, b) => a > b ? 1 : -1));
   isEq(sortedAscNums, [...sortedDescNums].reverse());
@@ -466,7 +466,7 @@ Deno.test("[csv connector] table.get limit / offset", async () => {
 
   const first5 = await table.get(
     [{ column: "todo", op: "eq", value: "limit-offset" }],
-    { column: "num", asc: true },
+    { column: "num" },
     5,
   );
 
@@ -476,7 +476,7 @@ Deno.test("[csv connector] table.get limit / offset", async () => {
 
   const next5 = await table.get(
     [{ column: "todo", op: "eq", value: "limit-offset" }],
-    { column: "num", asc: true },
+    { column: "num" },
     5,
     5,
   );

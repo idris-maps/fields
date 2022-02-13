@@ -84,7 +84,7 @@ const get = async <T>(
   const data = await toArray(stream);
   return sort
     ? data.sort((a, b) => {
-      const dir = sort.asc ? [1, -1] : [-1, 1];
+      const dir = sort.desc ? [-1, 1] : [1, -1];
       return a[sort.column] > b[sort.column] ? dir[0] : dir[1];
     })
     : data;
