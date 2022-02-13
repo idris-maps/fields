@@ -1,5 +1,3 @@
-import type { Field } from "./deps.ts";
-
 type Res = Promise<{ status: number; body?: any }>;
 
 export interface FieldsTableHandlers {
