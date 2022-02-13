@@ -6,7 +6,7 @@ import type { Field } from "../deps.ts";
 const Head = ({ fields }: { fields: Field[] }) => (
   <thead>
     <tr>
-      {fields.map((d) => <th>${d.label || d.property || ""}</th>)}
+      {fields.map((d) => <th>{d.label || d.property || ""}</th>)}
     </tr>
   </thead>
 );
