@@ -1,7 +1,7 @@
 import type { Field, Filter } from "./deps.ts";
 import type { FieldsDbTable, FieldsTableSort } from "../types.d.ts";
 import { exists } from "./fs.ts";
-import { filter, find, map, toArray } from "./deps.ts";
+import { filter, find, limit, map, offset, toArray } from "./deps.ts";
 import {
   createFile,
   getFiltering,
@@ -74,8 +74,13 @@ const get = async <T>(
   fields: Field[],
   filters?: Filter[],
   sort?: FieldsTableSort,
+  _limit?: number,
+  _offset?: number,
 ): Promise<T[]> => {
-  const stream = await streamData(path, fields, getFiltering(filters));
+  let pipes = (getFiltering(filters) || []);
+  if (_offset) pipes.push(offset(_offset));
+  if (_limit) pipes.push(limit(_limit));
+  const stream = await streamData(path, fields, pipes);
   const data = await toArray(stream);
   return sort
     ? data.sort((a, b) => {
@@ -120,7 +125,11 @@ export const initTable = async <T>(
     fields,
     remove: (id: string) => remove(folder, path, fields, id),
     getById: (id: string) => getById(path, fields, id),
-    get: (filters?: Filter[], sort?: FieldsTableSort) =>
-      get<T & { __id: string }>(path, fields, filters, sort),
+    get: (
+      filters?: Filter[],
+      sort?: FieldsTableSort,
+      limit?: number,
+      offset?: number,
+    ) => get<T & { __id: string }>(path, fields, filters, sort, limit, offset),
   };
 };

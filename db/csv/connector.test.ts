@@ -453,6 +453,39 @@ Deno.test("[csv connector] table.get sort", async () => {
   isEq(sortedAscNums, [...sortedDescNums].reverse());
 });
 
+Deno.test("[csv connector] table.get limit / offset", async () => {
+  const table = await getTable();
+  const data = Array.from(Array(10))
+    .map((_, i) => ({
+      todo: "limit-offset",
+      done: false,
+      num: i + 1,
+    }));
+
+  await Promise.all(data.map((d) => table.insert(d)));
+
+  const first5 = await table.get(
+    [{ column: "todo", op: "eq", value: "limit-offset" }],
+    { column: "num", asc: true },
+    5,
+  );
+
+  isEq(first5.length, 5);
+  isEq(first5[0].num, 1);
+  isEq(first5[4].num, 5);
+
+  const next5 = await table.get(
+    [{ column: "todo", op: "eq", value: "limit-offset" }],
+    { column: "num", asc: true },
+    5,
+    5,
+  );
+
+  isEq(next5.length, 5);
+  isEq(next5[0].num, 6);
+  isEq(next5[4].num, 10);
+});
+
 Deno.test("[csv connector] table.update", async () => {
   const table = await getTable();
   const data = { todo: "todo", done: false, num: 1 };

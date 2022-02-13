@@ -9,7 +9,12 @@ export interface FieldsTableSort {
 
 export interface FieldsDbTable<T> {
   fields: Field[];
-  get: (filters?: Filter[], sort?: FieldsTableSort) => Promise<WithId<T>[]>;
+  get: (
+    filters?: Filter[],
+    sort?: FieldsTableSort,
+    limit?: number,
+    offset?: number,
+  ) => Promise<WithId<T>[]>;
   getById: (id: string) => Promise<WithId<T> | undefined>;
   insert: (d: T) => Promise<WithId<T>>;
   name: string;

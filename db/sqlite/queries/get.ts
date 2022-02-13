@@ -55,6 +55,8 @@ export default async <T>(
   table: string,
   filters?: Filter[],
   sort?: FieldsTableSort,
+  limit?: number,
+  offset?: number,
 ): Promise<T[]> => {
   if (
     (!filters || !filters.length)
@@ -67,12 +69,16 @@ export default async <T>(
   const _sort = sort
     ? `ORDER BY ${sort.column} ${sort.asc ? "ASC" : "DESC"}`
     : "";
+  const _limit = limit ? `LIMIT ${limit}` : "";
+  const _offset = offset ? `OFFSET ${offset}` : "";
 
   const query = [
     `SELECT * FROM ${table} WHERE`,
     _filters.map((d) => d[0]).join(" AND "),
     _sort,
-  ].join(" ");
+    _limit,
+    _offset,
+  ].filter((d) => d !== "").join(" ");
 
   return await sql<T[]>(query, _filters.reduce((r, d) => [...r, ...d[1]], []));
 };

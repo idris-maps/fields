@@ -20,8 +20,15 @@ export default <T>(
   Promise.resolve({
     name,
     fields,
-    get: async (filters?: Filter[], sort?: FieldsTableSort) =>
-      (await get(sql, name, filters, sort)).map((d) => castResponse(fields, d)),
+    get: async (
+      filters?: Filter[],
+      sort?: FieldsTableSort,
+      limit?: number,
+      offset?: number,
+    ) =>
+      (await get(sql, name, filters, sort, limit, offset)).map((d) =>
+        castResponse(fields, d)
+      ),
     getById: async (id: string) =>
       castResponse(fields, await getById(sql, name, id)),
     insert: async (d: T) =>
