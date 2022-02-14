@@ -5,12 +5,19 @@ import type { Field } from "../deps.ts";
 import FieldComponent from "./field.tsx";
 import Each from "./each.tsx";
 
-export default (
-  method: "POST" | "PUT" | "UPDATE",
-  action: string,
-  fields: Field[],
-  submitLabel?: string,
-) => (
+interface Props {
+  method: "POST" | "PUT" | "UPDATE"
+  action: string
+  fields: Field[]
+  submitLabel?: string
+}
+
+export default ({
+  method,
+  action,
+  fields,
+  submitLabel,
+}: Props) => (
   <form action={action} method={method}>
     <Each<Field>
       data={fields}

@@ -14,6 +14,8 @@ import routes_api_tables_name_data_post from "./routes/api/tables/[name]/data/po
 import routes_api_tables_name_data_id_delete from "./routes/api/tables/[name]/data/[id]/delete.ts";
 import routes_api_tables_name_data_id_get from "./routes/api/tables/[name]/data/[id]/get.ts";
 import routes_api_tables_name_data_id_put from "./routes/api/tables/[name]/data/[id]/put.ts";
+import routes_tables_get from "./routes/tables/get.tsx";
+import routes_tables_name_get from "./routes/tables/[name]/get.tsx";
 
 const routes: Endpoint[] = [
   {
@@ -60,6 +62,16 @@ const routes: Endpoint[] = [
     path: "/api/tables/:name/data/:id",
     method: "PUT",
     handler: routes_api_tables_name_data_id_put,
+  },
+  {
+    path: "/tables",
+    method: "GET",
+    handler: routes_tables_get,
+  },
+  {
+    path: "/tables/:name",
+    method: "GET",
+    handler: routes_tables_name_get,
   },
 ];
 

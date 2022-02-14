@@ -18,7 +18,7 @@ const isSelected = (v: string, i: number, value?: string) =>
   value ? value === v : i === 0;
 
 const Label = ({ field }: { field: Field }) => (
-  <label for="${d.property}">{field.label || field.property}</label>
+  <label for={field.property}>{field.label || field.property}</label>
 );
 
 const SelectOptions = ({
