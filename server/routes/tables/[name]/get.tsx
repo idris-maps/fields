@@ -16,9 +16,9 @@ const getAction = (tableName: string) =>
   ].join("");
 
 interface Props {
-  tableName: string
-  fields: Field[]
-  data: any[]
+  tableName: string;
+  fields: Field[];
+  data: any[];
 }
 
 const Main = ({ tableName, fields, data }: Props) => (
@@ -26,7 +26,7 @@ const Main = ({ tableName, fields, data }: Props) => (
     <Table fields={fields} data={data} />
     <Form method="POST" action={getAction(tableName)} fields={fields} />
   </div>
-)
+);
 
 const get: Handler = async (req, res, { tables, meta }) => {
   const { status: tablesStatus, body: data } = await tables.getAll(
@@ -43,8 +43,8 @@ const get: Handler = async (req, res, { tables, meta }) => {
     <Layout
       header={<h2>{req.params.name}</h2>}
       main={<Main tableName={req.params.name} fields={fields} data={data} />}
-    />
+    />,
   );
-}
+};
 
-export default get
+export default get;

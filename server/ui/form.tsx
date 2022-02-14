@@ -6,10 +6,10 @@ import FieldComponent from "./field.tsx";
 import Each from "./each.tsx";
 
 interface Props {
-  method: "POST" | "PUT" | "UPDATE"
-  action: string
-  fields: Field[]
-  submitLabel?: string
+  method: "POST" | "PUT" | "UPDATE";
+  action: string;
+  fields: Field[];
+  submitLabel?: string;
 }
 
 export default ({

@@ -139,7 +139,7 @@ export default ({ field }: { field: Field }) => {
           {...{
             type: d.type,
             name: d.property,
-            value: 'true',
+            value: "true",
             checked: d.value ? true : undefined,
           }}
         />

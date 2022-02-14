@@ -2,8 +2,8 @@
 import { h } from "../../deps.ts";
 import type { Handler } from "../../local.ts";
 import "../../types.d.ts";
-import Layout from '../../ui/layout.tsx'
-import Each from '../../ui/each.tsx'
+import Layout from "../../ui/layout.tsx";
+import Each from "../../ui/each.tsx";
 
 const Main = ({ data }: { data: { name: string }[] }) => (
   <ul>
@@ -16,15 +16,15 @@ const Main = ({ data }: { data: { name: string }[] }) => (
       )}
     />
   </ul>
-)
+);
 
 const get: Handler = async (req, res, { meta }) => {
-  const { status, body } = await meta.getAll()
+  const { status, body } = await meta.getAll();
   return res.jsx(
     <Layout
       main={<Main data={body} />}
-    />
+    />,
   );
-}
+};
 
-export default get
+export default get;
