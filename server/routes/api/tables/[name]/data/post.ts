@@ -8,7 +8,7 @@ const post: Handler = async (req, res, { tables }) => {
     ? decodeURIComponent(req.query.redirect)
     : undefined;
 
-  return redirect ? res.redirect(redirect) : res.json(200, body);
+  return redirect ? res.redirect(redirect) : res.json(body);
 };
 
 export default post;
