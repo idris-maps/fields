@@ -134,10 +134,12 @@ export default ({ field }: { field: Field }) => {
   if (isCheckbox(d)) {
     return (
       <div class={`field field-${d.type}`}>
+        <input type="hidden" name={d.property} value="false"></input>
         <input
           {...{
             type: d.type,
             name: d.property,
+            value: 'true',
             checked: d.value ? true : undefined,
           }}
         />
