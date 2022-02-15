@@ -13,7 +13,7 @@ interface Props {
 }
 
 const defaultCss = [
-  "https://unpkg.com/@picocss/pico@1.4.4/css/pico.classless.min.css",
+  "/assets/style.css",
 ];
 
 export default ({

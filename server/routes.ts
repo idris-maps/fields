@@ -16,6 +16,7 @@ import routes_api_tables_name_data_id_get from "./routes/api/tables/[name]/data/
 import routes_api_tables_name_data_id_put from "./routes/api/tables/[name]/data/[id]/put.ts";
 import routes_tables_get from "./routes/tables/get.tsx";
 import routes_tables_name_get from "./routes/tables/[name]/get.tsx";
+import routes_assets_file_get from "./routes/assets/[file]/get.ts";
 
 const routes: Endpoint[] = [
   {
@@ -72,6 +73,11 @@ const routes: Endpoint[] = [
     path: "/tables/:name",
     method: "GET",
     handler: routes_tables_name_get,
+  },
+  {
+    path: "/assets/:file",
+    method: "GET",
+    handler: routes_assets_file_get,
   },
 ];
 
