@@ -5,24 +5,24 @@ import "../../types.d.ts";
 import Layout from "../../ui/layout.tsx";
 import Each from "../../ui/each.tsx";
 
-const Main = ({ data }: { data: { name: string }[] }) => (
+const Main = ({ data }: { data: { label: string; name: string }[] }) => (
   <ul>
-    <Each<{ name: string }>
+    <Each<{ label: string; name: string }>
       data={data}
-      render={({ name }) => (
+      render={({ label, name }) => (
         <a href={`/tables/${name}`}>
-          <li>{name}</li>
+          <li>{label}</li>
         </a>
       )}
     />
   </ul>
 );
 
-const get: Handler = async (req, res, { meta }) => {
-  const { status, body } = await meta.getAll();
+const get: Handler = async (_, res, { meta }) => {
+  const { body } = await meta.getAll();
   return res.jsx(
     <Layout
-      main={<Main data={body} />}
+      main={<Main data={body || []} />}
     />,
   );
 };

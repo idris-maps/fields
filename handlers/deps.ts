@@ -1,6 +1,7 @@
 export type { Field } from "../types.ts";
-export type { FieldsDb } from "../db/types.d.ts";
+export type { FieldsDb, Table } from "../db/types.d.ts";
 export type { Filter } from "../filters/mod.ts";
+export type { JSONSchema7 } from "../convert/json-schema.types.d.ts";
 export { isCheckbox, isNumericField } from "../types.ts";
 export {
   validateFields,

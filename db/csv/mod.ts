@@ -20,6 +20,7 @@ export default async (folder: string): Promise<FieldsDb> => {
     },
     dropTable: tables.drop,
     getFieldsByTableName: tables.getFieldsByTableName,
+    getTableByName: tables.getTableByName,
     listTables: () => tables.list(),
   };
 };

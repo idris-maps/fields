@@ -37,7 +37,7 @@ const get: Handler = async (req, res, { tables, meta }) => {
   const { status: fieldsStatus, body: fields } = await meta.getFields(
     req.params.name,
   );
-  if (fieldsStatus !== 200) return res.status(404);
+  if (fieldsStatus !== 200 || !fields) return res.status(404);
 
   return res.jsx(
     <Layout

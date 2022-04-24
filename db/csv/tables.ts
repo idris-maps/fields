@@ -57,6 +57,12 @@ const getFieldsByTableName = (store: TableStore, name: string) => {
   const table = store.get(name);
   return table ? table.fields : undefined;
 };
+
+const getTableByName = (store: TableStore, name: string) => {
+  const table = store.get(name);
+  return table ? { ...table, name } : undefined;
+};
+
 const dropTable = async (
   folder: string,
   path: string,
@@ -84,6 +90,7 @@ export default async (folder: string) => {
       addTable(path, store, name, label, fields),
     getFieldsByTableName: async (name: string) =>
       await getFieldsByTableName(store, name),
+    getTableByName: async (name: string) => await getTableByName(store, name),
     drop: (name: string) => dropTable(folder, path, store, name),
     list: async () => await getTablesFromStore(store),
   };
