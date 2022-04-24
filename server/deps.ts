@@ -1,10 +1,10 @@
-import _server from "https://deno.land/x/anders@v0.0.6/server/mod.ts";
-import { h as _h } from "https://deno.land/x/anders@v0.0.6/server/jsx.ts";
+import _server from "https://deno.land/x/anders@v0.0.9/server/mod.ts";
+import { h as _h } from "https://deno.land/x/anders@v0.0.9/server/jsx.ts";
 import _handlers from "../handlers/mod.ts";
 export type {
   Endpoint,
   Handler,
-} from "https://deno.land/x/anders@v0.0.6/server/types.d.ts";
+} from "https://deno.land/x/anders@v0.0.9/server/types.d.ts";
 export * from "../db/types.d.ts";
 export * from "../types.ts";
 export * from "../handlers/types.d.ts";
