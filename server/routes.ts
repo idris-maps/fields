@@ -6,6 +6,7 @@
 import type { Endpoint } from "./local.ts";
 
 import routes_get from "./routes/get.ts";
+import routes_new_table_get from "./routes/new/table/get.tsx";
 import routes_api_tables_get from "./routes/api/tables/get.ts";
 import routes_api_tables_post from "./routes/api/tables/post.ts";
 import routes_api_tables_name_schema_get from "./routes/api/tables/[name]/schema/get.ts";
@@ -23,6 +24,11 @@ const routes: Endpoint[] = [
     path: "/",
     method: "GET",
     handler: routes_get,
+  },
+  {
+    path: "/new/table",
+    method: "GET",
+    handler: routes_new_table_get,
   },
   {
     path: "/api/tables",
