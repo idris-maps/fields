@@ -25,6 +25,7 @@ export interface FieldsDbTable<T> {
 export interface FieldsDb {
   createTable: (
     name: string,
+    label: string,
     fields: Field[],
   ) => Promise<boolean>;
   initTable: <T>(

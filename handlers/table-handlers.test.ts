@@ -12,7 +12,8 @@ const fields: Field[] = [
   { type: "number", property: "num" },
 ];
 const name = "todos";
-await db.createTable(name, fields);
+const label = "label";
+await db.createTable(name, label, fields);
 const handlers = initTableHandlers(db).tables;
 const DATA = {
   ok: { done: false, todo: "todo", num: 1 },

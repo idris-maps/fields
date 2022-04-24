@@ -5,6 +5,7 @@ export const init = async (sql: Sql) => {
   const createTable = `
     CREATE TABLE IF NOT EXISTS __tables (
       name TEXT,
+      label TEXT,
       fields TEXT
     )
   `.trim();
@@ -20,13 +21,18 @@ export const init = async (sql: Sql) => {
   return;
 };
 
-export const addTable = async (sql: Sql, name: string, fields: Field[]) => {
+export const addTable = async (
+  sql: Sql,
+  name: string,
+  label: string,
+  fields: Field[],
+) => {
   const query = `
-    INSERT INTO __tables (name, fields)
-    VALUES (?, ?)
+    INSERT INTO __tables (name, label, fields)
+    VALUES (?, ?, ?)
   `;
 
-  await sql(query, [name, JSON.stringify(fields)]);
+  await sql(query, [name, label, JSON.stringify(fields)]);
 };
 
 export const getFieldsByTableName = async (

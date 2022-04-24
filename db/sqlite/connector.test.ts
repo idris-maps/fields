@@ -45,10 +45,11 @@ Deno.test("[sqlite connector] db should have expected keys", () => {
 
 Deno.test("[sqlite connector] create and init table", async () => {
   const tableName = "test_table_1";
-  const created = await db.createTable(tableName, todoFields);
+  const tableLabel = "Test table 1";
+  const created = await db.createTable(tableName, tableLabel, todoFields);
   isTrue(created, "should create a new table");
 
-  const duplicate = await db.createTable(tableName, todoFields);
+  const duplicate = await db.createTable(tableName, tableLabel, todoFields);
   isFalse(duplicate, "create should not duplicate tables");
 
   const existing = db.initTable(tableName);
@@ -75,14 +76,16 @@ Deno.test("[sqlite connector] create and init table", async () => {
 
 Deno.test("[sqlite connector] db.initTable", async () => {
   const tableName = "todos";
-  await db.createTable(tableName, todoFields);
+  const tableLabel = "Todos";
+  await db.createTable(tableName, tableLabel, todoFields);
   const table = await db.initTable<Todo>(tableName);
   isTruthy(table, "should init table");
 });
 
 const getTable = async (): Promise<FieldsDbTable<Todo>> => {
   const tableName = "todos";
-  await db.createTable(tableName, todoFields);
+  const tableLabel = "Todos";
+  await db.createTable(tableName, tableLabel, todoFields);
   const table = await db.initTable<Todo>(tableName);
   if (!table) {
     throw "no table";

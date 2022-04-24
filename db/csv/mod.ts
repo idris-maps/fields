@@ -12,10 +12,10 @@ export default async (folder: string): Promise<FieldsDb> => {
       if (!fields) return undefined;
       return initTable<T>(folder, name, fields);
     },
-    createTable: async (name: string, fields: Field[]) => {
+    createTable: async (name: string, label: string, fields: Field[]) => {
       const exists = Boolean(await tables.getFieldsByTableName(name));
       if (exists) return false;
-      await tables.add(name, fields);
+      await tables.add(name, label, fields);
       return createTable(folder, name, fields);
     },
     dropTable: tables.drop,

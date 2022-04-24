@@ -6,24 +6,27 @@ const getFilePath = (folder: string) => `${folder}/${FILE_NAME}`;
 
 interface Table {
   name: string;
+  label: string;
   fields: Field[];
 }
 
-const getTablesFromStore = (store: Map<string, Field[]>): Table[] =>
-  Array.from(store.entries()).map(([name, fields]) => ({ name, fields }));
+type TableStore = Map<string, { label: string; fields: Field[] }>;
 
-const saveTablesJson = (path: string, store: Map<string, Field[]>) =>
+const getTablesFromStore = (store: TableStore): Table[] =>
+  Array.from(store.entries()).map(([name, d]) => ({ name, ...d }));
+
+const saveTablesJson = (path: string, store: TableStore) =>
   saveJson(path, getTablesFromStore(store));
 
 const init = async (path: string) => {
   const fileExists = await exists(path);
-  const store = new Map<string, Field[]>();
+  const store = new Map<string, { label: string; fields: Field[] }>();
 
   if (fileExists) {
     try {
       const tables = await readJson<Table[]>(path);
-      tables.forEach(({ name, fields }) => {
-        store.set(name, fields);
+      tables.forEach(({ name, label, fields }) => {
+        store.set(name, { label, fields });
       });
     } catch (e) {
       console.log(e);
@@ -37,25 +40,27 @@ const init = async (path: string) => {
 
 const addTable = async (
   path: string,
-  store: Map<string, Field[]>,
+  store: TableStore,
   name: string,
+  label: string,
   fields: Field[],
 ) => {
   if (store.get(name)) {
     return false;
   }
-  store.set(name, fields);
+  store.set(name, { label, fields });
   await saveTablesJson(path, store);
   return true;
 };
 
-const getFieldsByTableName = (store: Map<string, Field[]>, name: string) =>
-  store.get(name);
-
+const getFieldsByTableName = (store: TableStore, name: string) => {
+  const table = store.get(name);
+  return table ? table.fields : undefined;
+};
 const dropTable = async (
   folder: string,
   path: string,
-  store: Map<string, Field[]>,
+  store: TableStore,
   name: string,
 ) => {
   store.delete(name);
@@ -75,7 +80,8 @@ export default async (folder: string) => {
   const store = await init(path);
 
   return {
-    add: (name: string, fields: Field[]) => addTable(path, store, name, fields),
+    add: (name: string, label: string, fields: Field[]) =>
+      addTable(path, store, name, label, fields),
     getFieldsByTableName: async (name: string) =>
       await getFieldsByTableName(store, name),
     drop: (name: string) => dropTable(folder, path, store, name),

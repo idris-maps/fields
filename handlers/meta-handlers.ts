@@ -18,7 +18,7 @@ const ERR = {
 
 const metaHandlers = (db: FieldsDb): FieldsMetaHandlers => ({
   post: async (data: any) => {
-    const { name, fields } = data;
+    const { name, label: _label, fields } = data;
 
     const nameValidation = validateTableName(name);
     if (!nameValidation.isValid) {
@@ -30,7 +30,11 @@ const metaHandlers = (db: FieldsDb): FieldsMetaHandlers => ({
       return { status: 400, body: { errors: messages || [] } };
     }
 
-    const created = await db.createTable(name, fields);
+    const label = _label === String(_label) && _label.trim() !== ""
+      ? _label
+      : name;
+
+    const created = await db.createTable(name, label, fields);
     return created
       ? { status: 200, body: { created: true } }
       : { status: 400, body: { errors: [ERR.tableExists] } };
