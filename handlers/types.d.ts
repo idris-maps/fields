@@ -1,6 +1,4 @@
-import type { Field, JSONSchema7, Table as _Table } from "./deps.ts";
-
-export type Table = _Table;
+import type { Field, JSONSchema7, Table } from "./deps.ts";
 
 type Res<T = any> = Promise<{ status: number; body?: T }>;
 
