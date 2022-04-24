@@ -5,12 +5,19 @@ import "../../../types.d.ts";
 import Layout from "../../../ui/layout.tsx";
 import FormBuilder from "../../../ui/form-builder.tsx";
 
+const Main = () =>
+  <FormBuilder
+    url="/api/tables"
+    method="POST"
+    redirectOnSuccess="/tables"
+  />
+
 const get: Handler = (req, res) =>
   res.jsx(
     <Layout
       css={['/assets/formBuilder.css']}
       js={['/assets/formBuilder.js']}
-      main={<FormBuilder url="/" method="POST" />}
+      main={<Main />}
     />
   );
 
