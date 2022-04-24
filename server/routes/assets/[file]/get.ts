@@ -1,5 +1,10 @@
 import type { Handler } from "../../../local.ts";
 
-const get: Handler = (req, res) => res.file("assets/" + req.params.file);
+const assetsFolder = '../../../assets'
+
+const get: Handler = (req, res, { utils }) => {
+  const pathToAssets = utils.getRelativePath(import.meta, assetsFolder)
+  return res.file(pathToAssets + "/" + req.params.file);
+}
 
 export default get;

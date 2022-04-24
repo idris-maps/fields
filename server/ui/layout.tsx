@@ -13,7 +13,8 @@ interface Props {
 }
 
 const defaultCss = [
-  "/assets/style.css",
+  "/assets/bonsai.core.css",
+  '/assets/style.css'
 ];
 
 export default ({

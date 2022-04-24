@@ -8,6 +8,9 @@ import type {
 export interface Local {
   meta: FieldsMetaHandlers;
   tables: FieldsTableHandlers;
+  utils: {
+    getRelativePath: (meta: ImportMeta, path: string) => string
+  }
 }
 
 export type Handler = _Handler<Local>;

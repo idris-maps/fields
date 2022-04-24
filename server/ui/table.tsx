@@ -38,4 +38,10 @@ const Table = ({ fields, data }: { fields: Field[]; data: any[] }) => (
   </table>
 );
 
-export default Table;
+export default ({
+  fields,
+  data,
+  noRows,
+}: { fields: Field[]; data: any[], noRows?: any }) => {
+  return data.length ? <Table fields={fields} data={data} /> : noRows
+}

@@ -34,15 +34,15 @@ const get: Handler = async (req, res, { tables, meta }) => {
   );
   if (tablesStatus !== 200) return res.status(404);
 
-  const { status: fieldsStatus, body: fields } = await meta.getFields(
+  const { status: fieldsStatus, body } = await meta.getOne(
     req.params.name,
   );
-  if (fieldsStatus !== 200 || !fields) return res.status(404);
+  if (fieldsStatus !== 200 || !body?.fields) return res.status(404);
 
   return res.jsx(
     <Layout
-      header={<h2>{req.params.name}</h2>}
-      main={<Main tableName={req.params.name} fields={fields} data={data} />}
+      header={<h2>{body?.label || req.params.name}</h2>}
+      main={<Main tableName={req.params.name} fields={body.fields} data={data} />}
     />,
   );
 };
