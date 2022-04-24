@@ -2,9 +2,19 @@ import { Field, Filter } from "./deps.ts";
 
 type WithId<T> = T & { __id: string };
 
+export interface FieldsTableSort {
+  column: string;
+  desc?: boolean;
+}
+
 export interface FieldsDbTable<T> {
   fields: Field[];
-  get: (filters?: Filter[]) => Promise<WithId<T>[]>;
+  get: (
+    filters?: Filter[],
+    sort?: FieldsTableSort,
+    limit?: number,
+    offset?: number,
+  ) => Promise<WithId<T>[]>;
   getById: (id: string) => Promise<WithId<T> | undefined>;
   insert: (d: T) => Promise<WithId<T>>;
   name: string;

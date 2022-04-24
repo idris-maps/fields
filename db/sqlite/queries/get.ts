@@ -1,5 +1,6 @@
 import type { Sql } from "../mod.ts";
 import type { Filter } from "../deps.ts";
+import type { FieldsTableSort } from "../../types.d.ts";
 
 const getLikeValue = (place: "start" | "end" | "contains", value: string) => {
   switch (place) {
@@ -53,17 +54,25 @@ export default async <T>(
   sql: Sql,
   table: string,
   filters?: Filter[],
+  sort?: FieldsTableSort,
+  limit?: number,
+  offset?: number,
 ): Promise<T[]> => {
-  if (!filters || !filters.length) {
-    const query = `SELECT * FROM ${table}`;
-    return await sql<T[]>(query);
-  }
+  const _filters = filters ? filters.map(getPart).filter((d) => d[0]) : [];
+  const _sort = sort
+    ? `ORDER BY ${sort.column} ${sort.desc ? "DESC" : "ASC"}`
+    : "";
+  const _limit = limit ? `LIMIT ${limit}` : "";
+  const _offset = offset ? `OFFSET ${offset}` : "";
 
-  const parts = filters.map(getPart).filter((d) => d[0]);
   const query = [
-    `SELECT * FROM ${table} WHERE`,
-    parts.map((d) => d[0]).join(" AND "),
-  ].join(" ");
+    `SELECT * FROM ${table}`,
+    _filters.length ? "WHERE" : "",
+    _filters.map((d) => d[0]).join(" AND "),
+    _sort,
+    _limit,
+    _offset,
+  ].filter((d) => d !== "").join(" ");
 
-  return await sql<T[]>(query, parts.reduce((r, d) => [...r, ...d[1]], []));
+  return await sql<T[]>(query, _filters.reduce((r, d) => [...r, ...d[1]], []));
 };
