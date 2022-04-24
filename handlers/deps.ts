@@ -9,3 +9,5 @@ export {
 } from "../validate/mod.ts";
 export { isString, isUndefined } from "../validate/utils.ts";
 export { toJsonSchema } from "../convert/mod.ts";
+export { parseQueryFilters } from "../filters/mod.ts";
+export { initSanitizer } from "../sanitize/mod.ts";

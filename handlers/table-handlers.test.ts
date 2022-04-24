@@ -264,3 +264,32 @@ await Deno.test('[Handlers .getAll] should filter "gt/gte/lt/lte"', async () => 
   isTrue(todosLte.includes("bbb"));
   isFalse(todosLte.includes("ccc"));
 });
+
+await Deno.test('[Handlers .getAll] should sort / limit / offset"', async () => {
+  await clearTable();
+  await Promise.all(
+    Array.from(Array(10)).map((_, i) => create({ num: i + 1 })),
+  );
+
+  const sort = await handlers.getAll(name, { sort: "num" });
+  const sortDesc = await handlers.getAll(name, { sort: "num.asc" });
+  isEq(sort.body, sortDesc.body);
+  isEq(sort.body[0].num, 1);
+  isEq(sort.body[9].num, 10);
+
+  const sortAsc = await handlers.getAll(name, { sort: "num.desc" });
+  isEq(sortAsc.body[0].num, 10);
+  isEq(sortAsc.body[9].num, 1);
+
+  const first5 = await handlers.getAll(name, { sort: "num", limit: "5" });
+  isEq(first5.body.length, 5);
+  isEq(first5.body[4].num, 5);
+
+  const next5 = await handlers.getAll(name, {
+    sort: "num",
+    limit: "5",
+    offset: "5",
+  });
+  isEq(next5.body.length, 5);
+  isEq(next5.body[4].num, 10);
+});
