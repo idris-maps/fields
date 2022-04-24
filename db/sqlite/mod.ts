@@ -28,13 +28,13 @@ export default async (fileName: string): Promise<FieldsDb> => {
       if (!fields) return undefined;
       return await initTable<T>(sql, name, fields);
     },
-    createTable: async (name: string, fields: Field[]) => {
+    createTable: async (name: string, label: string, fields: Field[]) => {
       const tables = await listTables(sql);
       const exists = tables.map((d) => d.name).includes(name);
       if (exists) return false;
 
       await createTable(sql, name, fields);
-      await addTable(sql, name, fields);
+      await addTable(sql, name, label, fields);
       return true;
     },
     dropTable: async (name: string) => await dropTable(sql, name),
