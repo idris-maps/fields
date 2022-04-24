@@ -37,6 +37,7 @@ Deno.test("[csv connector] db should have expected keys", () => {
       "createTable",
       "dropTable",
       "getFieldsByTableName",
+      "getTableByName",
       "listTables",
     ],
     db,
@@ -524,6 +525,7 @@ Deno.test("[csv connector] table.remove", async () => {
 Deno.test("[csv connector] listTables", async () => {
   const tables = await db.listTables();
   isTrue(tables.map((d) => d.name).includes("todos"));
+  isTrue(tables.map((d) => d.label).includes("Todos"));
   isEq(tables[0].fields, todoFields);
 });
 

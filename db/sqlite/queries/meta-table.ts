@@ -1,5 +1,5 @@
 import type { Sql } from "../mod.ts";
-import type { Field } from "../deps.ts";
+import type { Field, Table } from "../deps.ts";
 
 export const init = async (sql: Sql) => {
   const createTable = `
@@ -35,21 +35,30 @@ export const addTable = async (
   await sql(query, [name, label, JSON.stringify(fields)]);
 };
 
-export const getFieldsByTableName = async (
+export const getTableByName = async (
   sql: Sql,
   name: string,
-): Promise<Field[] | undefined> => {
-  const query = `SELECT fields FROM __tables WHERE name = ?`;
+): Promise<Table | undefined> => {
+  const query = `SELECT label, fields FROM __tables WHERE name = ?`;
 
-  const res = await sql<{ fields: string }[]>(query, [name]);
+  const res = await sql<{ label: string; fields: string }[]>(query, [name]);
 
   if (!res[0] || !res[0].fields) return undefined;
 
   try {
-    return JSON.parse(res[0].fields);
+    return { name, label: res[0].label, fields: JSON.parse(res[0].fields) };
   } catch {
     return undefined;
   }
+};
+
+export const getFieldsByTableName = async (
+  sql: Sql,
+  name: string,
+): Promise<Field[] | undefined> => {
+  const table = await getTableByName(sql, name);
+
+  return table ? table.fields : undefined;
 };
 
 export const dropTable = async (sql: Sql, name: string) => {
@@ -62,15 +71,21 @@ export const dropTable = async (sql: Sql, name: string) => {
 
 export const listTables = async (
   sql: Sql,
-): Promise<{ name: string; fields: Field[] }[]> => {
+): Promise<{ name: string; label: string; fields: Field[] }[]> => {
   const query = `SELECT * FROM __tables ORDER BY name`;
 
-  const res = await sql<{ name: string; fields: string }[]>(query);
+  const res = await sql<{ name: string; label: string; fields: string }[]>(
+    query,
+  );
 
   // @ts-ignore _
   return res.reduce((r, d) => {
     try {
-      return [...r, { name: d.name, fields: JSON.parse(d.fields) }];
+      return [...r, {
+        name: d.name,
+        label: d.label,
+        fields: JSON.parse(d.fields),
+      }];
     } catch {
       return r;
     }

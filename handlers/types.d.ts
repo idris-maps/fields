@@ -1,4 +1,8 @@
-type Res = Promise<{ status: number; body?: any }>;
+import type { Field, JSONSchema7, Table as _Table } from "./deps.ts";
+
+export type Table = _Table;
+
+type Res<T = any> = Promise<{ status: number; body?: T }>;
 
 export interface FieldsTableHandlers {
   delete: (name: string, id: string) => Res;
@@ -11,8 +15,9 @@ export interface FieldsTableHandlers {
 
 export interface FieldsMetaHandlers {
   delete: (name: string) => Res;
-  getFields: (name: string) => Res;
-  getAll: () => Res;
-  getSchema: (name: string) => Res;
+  getAll: () => Res<Table[]>;
+  getFields: (name: string) => Res<Field[]>;
+  getOne: (name: string) => Res<Table>;
+  getSchema: (name: string) => Res<JSONSchema7>;
   post: (data: any) => Res;
 }

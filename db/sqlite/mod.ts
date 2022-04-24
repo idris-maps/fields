@@ -4,6 +4,7 @@ import {
   addTable,
   dropTable,
   getFieldsByTableName,
+  getTableByName,
   init,
   listTables,
 } from "./queries/meta-table.ts";
@@ -38,6 +39,7 @@ export default async (fileName: string): Promise<FieldsDb> => {
       return true;
     },
     dropTable: async (name: string) => await dropTable(sql, name),
+    getTableByName: async (name: string) => await getTableByName(sql, name),
     getFieldsByTableName: async (name: string) =>
       await getFieldsByTableName(sql, name),
     listTables: async () => await listTables(sql),

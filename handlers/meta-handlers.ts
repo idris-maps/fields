@@ -51,6 +51,14 @@ const metaHandlers = (db: FieldsDb): FieldsMetaHandlers => ({
     const fields = await db.getFieldsByTableName(name);
     return fields ? { status: 200, body: fields } : { status: 404 };
   },
+  getOne: async (name: string) => {
+    if (!isString(name) || name.trim() === "") {
+      return { status: 404 };
+    }
+
+    const table = await db.getTableByName(name);
+    return table ? { status: 200, body: table } : { status: 404 };
+  },
   getSchema: async (name: string) => {
     if (!isString(name) || name.trim() === "") {
       return { status: 404 };

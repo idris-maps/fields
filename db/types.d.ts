@@ -7,6 +7,12 @@ export interface FieldsTableSort {
   desc?: boolean;
 }
 
+export interface Table {
+  name: string;
+  label: string;
+  fields: Field[];
+}
+
 export interface FieldsDbTable<T> {
   fields: Field[];
   get: (
@@ -33,5 +39,6 @@ export interface FieldsDb {
   ) => Promise<FieldsDbTable<T> | undefined>;
   dropTable: (name: string) => Promise<void>;
   getFieldsByTableName: (name: string) => Promise<Field[] | undefined>;
-  listTables: () => Promise<{ name: string; fields: Field[] }[]>;
+  getTableByName: (name: string) => Promise<Table | undefined>;
+  listTables: () => Promise<Table[]>;
 }
