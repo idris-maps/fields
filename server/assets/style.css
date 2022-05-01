@@ -1,5 +1,25 @@
 :root {
   --max-width-content: 1080px;
+  --background: #0d1117;
+  --text-main: rgb(245, 245, 245);
+  --form-text: var(--text-main);
+  --border: rgba(245, 245, 245, .2);
+  --blue: #2d4b77;
+  --grey: #1d2633;
+  --text-muted: #31435b;
+  --select-arrow-white: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%2263%22%20width%3D%22117%22%3E%3Cpolyline%20points%3D%223%2C3%2058.5%2C60%20114%2C3%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%225%22%20%2F%3E%3C%2Fsvg%3E");
+  --select-arrow-black: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%2263%22%20width%3D%22117%22%3E%3Cpolyline%20points%3D%223%2C3%2058.5%2C60%20114%2C3%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%225%22%20%2F%3E%3C%2Fsvg%3E");
+  --select-arrow: var(--select-arrow-white);
+}
+
+body {
+  background-color: var(--background);
+}
+
+@media (min-width: 500px) {
+  body {
+    font-size: 1.2em;
+  }
 }
 
 header,

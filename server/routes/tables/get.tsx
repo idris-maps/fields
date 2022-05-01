@@ -6,16 +6,21 @@ import Layout from "../../ui/layout.tsx";
 import Each from "../../ui/each.tsx";
 
 const Main = ({ data }: { data: { label: string; name: string }[] }) => (
-  <ul>
-    <Each<{ label: string; name: string }>
-      data={data}
-      render={({ label, name }) => (
-        <a href={`/tables/${name}`}>
-          <li>{label}</li>
-        </a>
-      )}
-    />
-  </ul>
+  <div>
+    <a href="/new/table">
+      <button>New</button>
+    </a>
+    <ul>
+      <Each<{ label: string; name: string }>
+        data={data}
+        render={({ label, name }) => (
+          <a href={`/tables/${name}`}>
+            <li>{label}</li>
+          </a>
+        )}
+      />
+    </ul>
+  </div>
 );
 
 const get: Handler = async (_, res, { meta }) => {
