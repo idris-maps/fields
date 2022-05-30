@@ -2,6 +2,7 @@ export type { Field } from "../types.ts";
 export type { FieldsDb, Table } from "../db/types.d.ts";
 export type { Filter } from "../filters/mod.ts";
 export type { JSONSchema7 } from "../convert/json-schema.types.d.ts";
+export { DB } from "https://deno.land/x/sqlite@v3.4.0/mod.ts";
 export { isCheckbox, isNumericField } from "../types.ts";
 export {
   validateFields,

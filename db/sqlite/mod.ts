@@ -14,9 +14,7 @@ import type { Field } from "./deps.ts";
 
 export type Sql = <T>(query: string, params?: unknown[]) => T;
 
-export default async (fileName: string): Promise<FieldsDb> => {
-  const db = new DB(fileName);
-
+export default async (db: DB): Promise<FieldsDb> => {
   // @ts-ignore RowObject
   const sql: Sql = (query: string, params?: any[]) =>
     db.queryEntries(query, params);

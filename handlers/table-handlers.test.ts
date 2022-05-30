@@ -1,11 +1,12 @@
 import { assertEquals } from "https://deno.land/std@0.117.0/testing/asserts.ts";
 import initTableHandlers from "./mod.ts";
 import initDb from "../db/sqlite/mod.ts";
+import { DB } from './deps.ts'
 import type { Field } from "./deps.ts";
 
 // setup
 
-const db = await initDb(":memory:");
+const db = await initDb(new DB(":memory:"));
 const fields: Field[] = [
   { type: "checkbox", property: "done" },
   { type: "text", property: "todo", maxLength: 10, minLength: 2 },
